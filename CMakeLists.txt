@@ -3,4 +3,4 @@ project(Priamus)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(Priamus main.cpp)
+add_executable(Priamus src/main.cpp)
