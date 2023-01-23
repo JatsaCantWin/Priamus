@@ -1,25 +1,22 @@
-//
-// Created by peter on 11/9/22.
-//
-
 #ifndef PRIAMUS_TABLE_H
 #define PRIAMUS_TABLE_H
 
-#include <map>
-#include <string>
+#include <vector>
 #include "Column.h"
 
 class Table {
 private:
-    std::map<std::string, Column> dataContainer;
+    std::vector<Column> columnContainer;
+    std::string tableName;
 public:
-    Column& getColumnByName(const std::string& columnName);
-    Column& getColumnByIndex(int index);
-    std::string getColumnNameByIndex(int index);
-    size_t getColumnCount();
-    size_t getRowCount();
-    void deleteColumnByName(const std::string& columnName);
-    void insertColumn(const std::string& columnName, const Column& column);
+    explicit Table(const std::string& tableName);
+
+    const std::vector<Column>& getColumns() const;
+    std::string getDataCassandra(int column, int row) const;
+    std::string getData(int column, int row) const;
+    std::string getName() const;
+    void addColumn(const Column& newColumn);
+    void addCell(int column, const Cell& newCell);
     void print();
 };
 

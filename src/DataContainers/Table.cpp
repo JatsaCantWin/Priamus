@@ -2,51 +2,43 @@
 #include <iomanip>
 #include "Table.h"
 
-Column& Table::getColumnByName(const std::string& columnName) {
-    return dataContainer.find(columnName)->second;
+Table::Table(const std::string &tableName) {
+    this->tableName = tableName;
 }
 
-void Table::deleteColumnByName(const std::string& columnName) {
-    dataContainer.erase(columnName);
+const std::vector<Column> &Table::getColumns() const {
+    return columnContainer;
 }
 
-Column& Table::getColumnByIndex(int index)
-{
-    auto returnColumn = dataContainer.begin();
-    std::advance(returnColumn, index);
-    return returnColumn->second;
+std::string Table::getName() const {
+    return tableName;
 }
 
-std::string Table::getColumnNameByIndex(int index)
-{
-    auto returnColumn = dataContainer.begin();
-    std::advance(returnColumn, index);
-    return returnColumn->first;
+std::string Table::getData(int column, int row) const {
+    return getColumns()[column].getCells()[row].getData();
 }
 
-size_t Table::getColumnCount() {
-    return dataContainer.size();
+std::string Table::getDataCassandra(int column, int row) const {
+    return getColumns()[column].getCells()[row].getDataCassandra();
 }
 
-size_t Table::getRowCount() {
-    return dataContainer.begin()->second.getCellCount();
+void Table::addColumn(const Column& newColumn) {
+    columnContainer.push_back(newColumn);
 }
 
-void Table::insertColumn(const std::string& columnName, const Column& column) {
-    if (dataContainer.find(columnName) != dataContainer.end())  // ? if column already exists, don't insert it
-        return;
-    dataContainer.insert({columnName, column});
+void Table::addCell(int column, const Cell &newCell) {
+    columnContainer[column].addCell(newCell);
 }
 
 void Table::print() {
-    for (unsigned long int i = 0; i < getColumnCount(); i++)
+    for (const auto & column : columnContainer)
     {
-        std::cout << std::setw(30) << getColumnNameByIndex(i) << " | " ;
+        std::cout << std::setw(30) << column.getName() << " | " ;
     }
     std::cout << std::endl;
-    for (unsigned long int j = 0; j < getRowCount(); j++) {
-        for (unsigned long int i = 0; i < getColumnCount(); i++) {
-            std::cout << std::setw(30) << getColumnByIndex(i).getCellDataAtIndex(j) << " | ";
+    for (int j = 0; j < columnContainer[0].getCells().size(); j++) {
+        for (int i = 0; i < columnContainer.size(); i++) {
+            std::cout << std::setw(30) << getData(i, j) << " | ";
         }
         std::cout << std::endl;
     }

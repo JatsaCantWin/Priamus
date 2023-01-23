@@ -1,26 +1,19 @@
-//
-// Created by peter on 11/21/22.
-//
-
 #ifndef PRIAMUS_COLUMN_H
 #define PRIAMUS_COLUMN_H
 
 #include <vector>
-#include <string>
-
-enum class DataType {Integer, FloatingPoint, String};
+#include "Cell.h"
 
 class Column {
 private:
-    DataType dataType;
-    std::vector<std::string> dataContainer;
+    std::vector<Cell> cellContainer;
+    std::string columnName;
 public:
-    explicit Column(DataType dataType);
-    void setCellDataAtIndex(int index, const std::string& data);
-    std::string getCellDataAtIndex(int index);
-    void appendCellData(const std::string& data);
-    DataType getDataType();
-    size_t getCellCount();
+    explicit Column(const std::string& columnName);
+
+    const std::vector<Cell>& getCells() const;
+    void addCell(const Cell& newCell);
+    std::string getName() const;
 };
 
 
